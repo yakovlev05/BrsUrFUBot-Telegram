@@ -1,5 +1,9 @@
 ﻿name: urfu_brs_bot
 
+networks:
+  urfu_brs_bot:
+    external: true
+
 services:
   brs_tg_bot:
     build:
@@ -12,3 +16,5 @@ services:
       - WEBHOOK_URL=${WEBHOOK_URL}
     ports:
       - "8080:8080"
+    networks:
+      - urfu_brs_bot

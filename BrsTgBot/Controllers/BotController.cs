@@ -21,4 +21,9 @@ public class BotController : Controller
         Console.WriteLine(update.Message.Text);
         _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Hello, world!");
     }
+
+    public ActionResult<string> Check()
+    {
+        return "Содинение есть";
+    }
 }
