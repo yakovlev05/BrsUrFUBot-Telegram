@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     container_name: brs_tg_bot
-#    environment:
-#      - TEXT=${TEXT}
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
     ports:
       - "8080:8080"

@@ -1,11 +1,22 @@
+using Telegram.Bot;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient("telegram_bot_client")
+    .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
+    {
+        var botToken = builder.Configuration.GetValue<string>("BOT_TOKEN");
+        if (botToken is null) throw new NullReferenceException("BOT_TOKEN is not set.");
+        TelegramBotClientOptions options = new(botToken);
+        return new TelegramBotClient(options, httpClient);
+    });
 
 var app = builder.Build();
 
