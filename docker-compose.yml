@@ -4,10 +4,11 @@ services:
   brs_tg_bot:
     build:
       context: ./BrsTgBot
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     restart: always
     container_name: brs_tg_bot
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
+      - WEBHOOK_URL=${WEBHOOK_URL}
     ports:
       - "8080:8080"

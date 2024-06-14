@@ -1,3 +1,4 @@
+using BrsTgBot.Services;
 using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient("telegram_bot_client")
         TelegramBotClientOptions options = new(botToken);
         return new TelegramBotClient(options, httpClient);
     });
+builder.Services.AddHostedService<WebhookService>();
 
 var app = builder.Build();
 

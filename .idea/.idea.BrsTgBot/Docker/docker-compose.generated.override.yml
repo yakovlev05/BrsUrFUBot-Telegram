@@ -3,7 +3,7 @@ services:
   brs_tg_bot:
     build:
       context: "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\BrsTgBot"
-      dockerfile: "Dockerfile"
+      dockerfile: "./Dockerfile"
       target: "base"
     command: []
     entrypoint:
