@@ -7,10 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BrsTgBot/BrsTgBot.csproj", "BrsTgBot/"]
+COPY ["BrsTgBot.csproj", "BrsTgBot/"]
 RUN dotnet restore "BrsTgBot/BrsTgBot.csproj"
-COPY . .
 WORKDIR "/src/BrsTgBot"
+COPY . .
 RUN dotnet build "BrsTgBot.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

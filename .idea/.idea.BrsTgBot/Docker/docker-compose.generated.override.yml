@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  brs_tg_bot:
+    build:
+      context: "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\BrsTgBot"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/BrsTgBot.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "brstgbot:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\alexe\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\BrsTgBot:/app:rw"
+    - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram:/src:rw"
+    working_dir: "/app"

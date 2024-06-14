@@ -1,0 +1,13 @@
+﻿name: urfu_brs_bot
+
+services:
+  brs_tg_bot:
+    build:
+      context: ./BrsTgBot
+      dockerfile: Dockerfile
+    restart: always
+    container_name: brs_tg_bot
+#    environment:
+#      - TEXT=${TEXT}
+    ports:
+      - "8080:8080"
