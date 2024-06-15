@@ -1,3 +1,4 @@
+using BrsTgBot.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -9,21 +10,22 @@ namespace BrsTgBot.Controllers;
 public class BotController : Controller
 {
     private readonly ITelegramBotClient _botClient;
+    private readonly IUpdateHandlers _updateHandlers;
 
-    public BotController(ITelegramBotClient botClient)
+    public BotController(ITelegramBotClient botClient, IUpdateHandlers updateHandlers)
     {
         _botClient = botClient;
+        _updateHandlers = updateHandlers;
     }
 
     [HttpPost]
-    public void Post(Update update)
+    public async void Post(Update update, CancellationToken cancellationToken)
     {
-        Console.WriteLine(update.Message.Text);
-        _botClient.SendTextMessageAsync(update.Message.Chat.Id, "Hello, world!");
+        await _updateHandlers.HandleUpdateAsync(update, cancellationToken);
     }
 
     public ActionResult<string> Check()
     {
-        return "Содинение есть";
+        return "Соединение есть";
     }
 }
