@@ -18,3 +18,13 @@ services:
       - "8080:8080"
     networks:
       - urfu_brs_bot
+  brs_user_service:
+    build:
+      context: ./UserService
+      dockerfile: ./Dockerfile
+    restart: always
+    container_name: brs_user_service
+    ports:
+      - "8082:8082"
+    networks:
+      - urfu_brs_bot
