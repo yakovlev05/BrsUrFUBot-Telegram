@@ -1,3 +1,4 @@
+using BrsTgBot.Services.Factory;
 using BrsTgBot.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -5,10 +6,19 @@ using Telegram.Bot.Types.Enums;
 
 namespace BrsTgBot.Services;
 
-public class UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger) : IUpdateHandlers
+public class UpdateHandlers : IUpdateHandlers
 {
-    private readonly ITelegramBotClient _botClient = botClient;
-    private readonly ILogger<UpdateHandlers> _logger = logger;
+    private readonly ITelegramBotClient _botClient;
+    private readonly ILogger<UpdateHandlers> _logger;
+    private readonly IUpdateHandler _messageUpdateHandler;
+
+    public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger,
+        IUpdateHandlerFactory updateHandlerFactory)
+    {
+        _botClient = botClient;
+        _logger = logger;
+        _messageUpdateHandler = updateHandlerFactory.Create<MessageUpdateHandler>();
+    }
 
     public async Task HandleUpdateAsync(Update update, CancellationToken cancellationToken)
     {
@@ -16,10 +26,9 @@ public class UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers
 
         var handler = update.Type switch
         {
-            UpdateType.Message => new Task(() => Console.WriteLine("ТЕКСТ"))
+            UpdateType.Message => _messageUpdateHandler.HandleUpdateAsync(update, cancellationToken)
         };
-        
-        handler.Start();
+
         await handler;
     }
 }

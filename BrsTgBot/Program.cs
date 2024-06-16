@@ -1,4 +1,5 @@
 using BrsTgBot.Services;
+using BrsTgBot.Services.Factory;
 using BrsTgBot.Services.Interfaces;
 using Telegram.Bot;
 
@@ -21,6 +22,8 @@ builder.Services.AddHttpClient("telegram_bot_client")
     });
 builder.Services.AddHostedService<WebhookService>();
 builder.Services.AddScoped<IUpdateHandlers, UpdateHandlers>();
+builder.Services.AddScoped<IUpdateHandlerFactory, UpdateHandlerFactory>();
+builder.Services.AddScoped<IUpdateHandler, MessageUpdateHandler>();
 
 var app = builder.Build();
 

@@ -3,10 +3,10 @@ using Telegram.Bot.Types;
 
 namespace BrsTgBot.Services;
 
-public class MessageUpdateHandler : IUpdateHandlers
+public class MessageUpdateHandler : IUpdateHandler
 {
     public async Task HandleUpdateAsync(Update update, CancellationToken cancellationToken)
     {
-        Console.WriteLine("ТЕКСТ");
+        Console.WriteLine("ТЕКСТ+++");
     }
 }
