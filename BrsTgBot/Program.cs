@@ -24,6 +24,8 @@ builder.Services.AddHostedService<WebhookService>();
 builder.Services.AddScoped<IUpdateHandlers, UpdateHandlers>();
 builder.Services.AddScoped<IUpdateHandlerFactory, UpdateHandlerFactory>();
 builder.Services.AddScoped<IUpdateHandler, MessageUpdateHandler>();
+builder.Services.AddScoped<IUpdateHandler, CallbackQueryUpdateHandler>();
+builder.Services.AddScoped<ITelegramService, TelegramService>();
 
 var app = builder.Build();
 
