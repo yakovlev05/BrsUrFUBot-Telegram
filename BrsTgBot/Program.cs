@@ -1,5 +1,6 @@
 using BrsTgBot.HttpClients;
-using BrsTgBot.HttpClients.Abstract;
+using BrsTgBot.HttpClients.UserClient;
+using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.Services;
 using BrsTgBot.Services.Interfaces;
 using Telegram.Bot;

@@ -1,4 +1,4 @@
-using BrsTgBot.HttpClients.Abstract;
+using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
@@ -19,17 +19,5 @@ public class BotController : Controller
         _botClient = botClient;
         _updateHandlers = updateHandlers;
         _userClient = userClient;
-    }
-
-    [HttpPost]
-    public async void Post(Update update, CancellationToken cancellationToken)
-    {
-        await _updateHandlers.HandleUpdateAsync(update, cancellationToken);
-    }
-
-    public async Task<ActionResult<string>> Check()
-    {
-        await _userClient.TestConnection();
-        return "Соединение есть";
     }
 }
