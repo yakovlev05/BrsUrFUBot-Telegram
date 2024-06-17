@@ -49,3 +49,13 @@ services:
       - brs_urfu_bot_db:/var/lib/postgresql/data
     networks:
       - urfu_brs_bot
+  brs_urfu_service:
+    build:
+      context: ./UrfuService
+      dockerfile: ./Dockerfile
+    restart: always
+    container_name: brs_urfu_service
+    ports:
+      - "8082:8080"
+    networks:
+      - urfu_brs_bot

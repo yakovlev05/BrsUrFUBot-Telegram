@@ -19,6 +19,25 @@ services:
     - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\BrsTgBot:/app:rw"
     - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram:/src:rw"
     working_dir: "/app"
+  brs_urfu_service:
+    build:
+      context: "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\UrfuService"
+      dockerfile: "./Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/UrfuService.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "urfuservice:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\alexe\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\UrfuService:/app:rw"
+    - "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram:/src:rw"
+    working_dir: "/app"
   brs_user_service:
     build:
       context: "C:\\Users\\alexe\\RiderProjects\\BrsUrFUBot-Telegram\\UserService"
