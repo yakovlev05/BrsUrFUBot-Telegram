@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(o =>
     o.UseNpgsql(builder.Configuration.GetValue<string>("DB_CONNECTION_STRING")));
-builder.Services.AddScoped<IRepository<UserEntity>, IRepository<UserEntity>>();
+builder.Services.AddScoped<IRepository<UserEntity>, Repository<UserEntity>>();
 
 var app = builder.Build();
 

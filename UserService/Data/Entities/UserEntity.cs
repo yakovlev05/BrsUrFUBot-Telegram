@@ -6,6 +6,6 @@ public class UserEntity
     public string? UrfuLogin { get; set; }
     public string? UrfuPassword { get; set; }
     public DateTime RegisteredInBot = DateTime.Now.ToUniversalTime();
-    public string TelegramId { get; set; } = null!;
+    public int TelegramId { get; set; }
     public string TelegramUsername { get; set; } = null!;
 }
