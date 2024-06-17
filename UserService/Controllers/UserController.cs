@@ -20,4 +20,11 @@ public class UserController(IRepository<UserEntity> repository) : Controller
 
         return Ok();
     }
+
+    [HttpGet]
+    public ActionResult<string> Test()
+    {
+        Console.WriteLine("Эндпоинт тест");
+        return "подключение есть";
+    }
 }

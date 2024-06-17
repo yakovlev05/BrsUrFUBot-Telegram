@@ -18,6 +18,7 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - WEBHOOK_URL=${WEBHOOK_URL}
+      - USER_SERVICE_URL=${USER_SERVICE_URL}
     ports:
       - "8080:8080"
     networks:
