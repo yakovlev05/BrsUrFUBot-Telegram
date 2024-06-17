@@ -7,7 +7,7 @@ namespace BrsTgBot.Services;
 public class MessageUpdateHandler(
     ITelegramBotClient botClient,
     ILogger<MessageUpdateHandler> logger,
-    ITelegramService telegramService) : IUpdateHandler
+    ITelegramService telegramService) : IUpdateHandler<MessageUpdateHandler>
 {
     public async Task HandleUpdateAsync(Update update, CancellationToken cancellationToken)
     {
