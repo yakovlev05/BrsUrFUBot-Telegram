@@ -4,6 +4,10 @@ networks:
   urfu_brs_bot:
     external: true
 
+volumes:
+  brs_urfu_bot_db:
+    external: true
+
 services:
   brs_tg_bot:
     build:
@@ -24,7 +28,23 @@ services:
       dockerfile: ./Dockerfile
     restart: always
     container_name: brs_user_service
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
     ports:
       - "8082:8082"
+    networks:
+      - urfu_brs_bot
+  brs_db:
+    image: postgres:latest
+    restart: always
+    container_name: brs_db
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - brs_urfu_bot_db:/var/lib/postgresql/data
     networks:
       - urfu_brs_bot
