@@ -5,7 +5,9 @@ networks:
     external: true
 
 volumes:
-  brs_urfu_bot_db:
+  brs_user_service_db:
+    external: true
+  brs_urfu_service_db:
     external: true
 
 services:
@@ -30,15 +32,15 @@ services:
     restart: always
     container_name: brs_user_service
     environment:
-      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING_USER_SERVICE}
     ports:
       - "8081:8080"
     networks:
       - urfu_brs_bot
-  brs_db:
+  brs_user_service_db:
     image: postgres:latest
     restart: always
-    container_name: brs_db
+    container_name: brs_user_service_db
     environment:
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
@@ -46,7 +48,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - brs_urfu_bot_db:/var/lib/postgresql/data
+      - brs_user_service_db:/var/lib/postgresql/data
     networks:
       - urfu_brs_bot
   brs_urfu_service:
@@ -55,7 +57,23 @@ services:
       dockerfile: ./Dockerfile
     restart: always
     container_name: brs_urfu_service
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING_URFU_SERVICE}
     ports:
       - "8082:8080"
+    networks:
+      - urfu_brs_bot
+  brs_urfu_service_db:
+    image: postgres:latest
+    restart: always
+    container_name: brs_urfu_service_db
+    environment:
+      - POSTGRES_USER=${PG_USER_URFU_SERVICE}
+      - POSTGRES_PASSWORD=${PG_PASSWORD_URFU_SERVICE}
+      - POSTGRES_DB=${PG_DB_URFU_SERVICE}
+    ports:
+      - "5433:5432"
+    volumes:
+      - brs_urfu_service_db:/var/lib/postgresql/data
     networks:
       - urfu_brs_bot
