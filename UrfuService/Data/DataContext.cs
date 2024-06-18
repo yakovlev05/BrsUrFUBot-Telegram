@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using UrfuService.Data.Entities;
 
 namespace UrfuService.Data;
 
 public class DataContext : DbContext
 {
+    public DbSet<BrsEntity> Brs { get; set; }
+
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
         Database.Migrate();
