@@ -1,4 +1,3 @@
-using System.Net;
 using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.HttpClients.UserClient.Models;
 
@@ -20,15 +19,36 @@ public class UserClient : IUserClient
         _logger = logger;
     }
 
-    public async Task RegisterInBotAsync(int userId, string username, CancellationToken cancellationToken)
+    public async Task<HttpResponseMessage> AddUserAsync(AddUserRequestModel model, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("RegisterInBotAsync with userId: {userId} and username: {username}", userId, username);
+        _logger.LogInformation("AddUserAsync with model: {model}", model);
 
-        var model = new AddUserRequestModel(null, null, userId, username);
         var response = await _client.PostAsJsonAsync("add", model, cancellationToken);
+        return response;
+    }
 
-        // Игнорируем 400, потому что нас не интересует регистрация пользователя
-        if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.BadRequest)
-            throw new HttpRequestException($"Failed to register user in bot. Status code: {response.StatusCode}");
+    public async Task<HttpResponseMessage> GetUserByTelegramIdAsync(int id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("GetUserByTelegramIdAsync with id: {id}", id);
+
+        var response = await _client.GetAsync($"telegramId/{id}", cancellationToken);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> UpdateUserByTelegramIdAsync(int id, UpdateUserRequestModel model,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("UpdateUserByTelegramIdAsync with id: {id} and model: {model}", id, model);
+
+        var response = await _client.PutAsJsonAsync($"telegramId/{id}", model, cancellationToken);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> DeleteUserByTelegramIdAsync(int id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("DeleteUserByTelegramIdAsync with id: {id}", id);
+
+        var response = await _client.DeleteAsync($"telegramId/{id}", cancellationToken);
+        return response;
     }
 }
