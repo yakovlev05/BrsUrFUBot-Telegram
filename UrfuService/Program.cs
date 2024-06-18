@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrfuService.Data;
+using UrfuService.Data.Entities;
+using UrfuService.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(o =>
     o.UseNpgsql(builder.Configuration.GetValue<string>("DB_CONNECTION_STRING")));
+builder.Services.AddScoped<IRepository<BrsEntity>, Repository<BrsEntity>>();
 
 var app = builder.Build();
 
