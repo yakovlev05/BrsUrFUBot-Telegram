@@ -1,23 +1,17 @@
-using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace BrsTgBot.Controllers;
 
 [ApiController]
 [Route("/")]
-public class BotController : Controller
+public class BotController(IUpdateHandlers updateHandlers) : Controller
 {
-    private readonly ITelegramBotClient _botClient;
-    private readonly IUpdateHandlers _updateHandlers;
-    private readonly IUserClient _userClient;
-
-    public BotController(ITelegramBotClient botClient, IUpdateHandlers updateHandlers, IUserClient userClient)
+    [HttpPost]
+    public async Task<ActionResult> Post([FromBody] Update update, CancellationToken cancellationToken)
     {
-        _botClient = botClient;
-        _updateHandlers = updateHandlers;
-        _userClient = userClient;
+        await updateHandlers.HandleUpdateAsync(update, cancellationToken);
+        return Ok();
     }
 }
