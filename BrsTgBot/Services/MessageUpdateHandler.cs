@@ -17,6 +17,7 @@ public class MessageUpdateHandler(
         var action = messageText switch
         {
             "/start" => telegramService.SendNewMainMenuAsync(update.Message, cancellationToken),
+            _ => telegramService.SendNewMainMenuAsync(update.Message, cancellationToken)
         };
 
         await action;

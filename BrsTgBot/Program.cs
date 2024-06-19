@@ -26,6 +26,7 @@ builder.Services.AddHostedService<WebhookService>();
 builder.Services.AddScoped<IUpdateHandlers, UpdateHandlers>();
 builder.Services.AddScoped<IUpdateHandler<MessageUpdateHandler>, MessageUpdateHandler>();
 builder.Services.AddScoped<IUpdateHandler<CallbackQueryUpdateHandler>, CallbackQueryUpdateHandler>();
+builder.Services.AddScoped<IUpdateHandler<UnknownUpdateHandler>, UnknownUpdateHandler>();
 builder.Services.AddScoped<ITelegramService, TelegramService>();
 builder.Services.AddScoped<IUserClient, UserClient>();
 

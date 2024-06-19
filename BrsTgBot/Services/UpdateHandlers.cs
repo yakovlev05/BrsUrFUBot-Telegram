@@ -9,7 +9,8 @@ public class UpdateHandlers(
     ITelegramBotClient botClient,
     ILogger<UpdateHandlers> logger,
     IUpdateHandler<MessageUpdateHandler> messageUpdateHandler,
-    IUpdateHandler<CallbackQueryUpdateHandler> callbackQueryUpdateHandler)
+    IUpdateHandler<CallbackQueryUpdateHandler> callbackQueryUpdateHandler,
+    IUpdateHandler<UnknownUpdateHandler> unknownUpdateHandler)
     : IUpdateHandlers
 {
     private readonly ITelegramBotClient _botClient = botClient;
@@ -24,7 +25,8 @@ public class UpdateHandlers(
         var handler = update.Type switch
         {
             UpdateType.Message => messageUpdateHandler.HandleUpdateAsync(update, cancellationToken),
-            UpdateType.CallbackQuery => callbackQueryUpdateHandler.HandleUpdateAsync(update, cancellationToken)
+            UpdateType.CallbackQuery => callbackQueryUpdateHandler.HandleUpdateAsync(update, cancellationToken),
+            _ => unknownUpdateHandler.HandleUpdateAsync(update, cancellationToken)
         };
 
         await handler;
