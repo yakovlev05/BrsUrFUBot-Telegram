@@ -1,3 +1,4 @@
+using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -10,7 +11,8 @@ public class UpdateHandlers(
     ILogger<UpdateHandlers> logger,
     IUpdateHandler<MessageUpdateHandler> messageUpdateHandler,
     IUpdateHandler<CallbackQueryUpdateHandler> callbackQueryUpdateHandler,
-    IUpdateHandler<UnknownUpdateHandler> unknownUpdateHandler)
+    IUpdateHandler<UnknownUpdateHandler> unknownUpdateHandler,
+    IUserClient userClient)
     : IUpdateHandlers
 {
     private readonly ITelegramBotClient _botClient = botClient;
@@ -47,6 +49,13 @@ public class UpdateHandlers(
             _ => long.MinValue
         };
 
+        var username = update.Type switch
+        {
+            UpdateType.Message => update.Message?.Chat.Username,
+            UpdateType.CallbackQuery => update.CallbackQuery?.Message?.Chat.Username,
+            _ => null
+        };
+
         switch (chatId)
         {
             case null:
@@ -56,6 +65,8 @@ public class UpdateHandlers(
                 logger.LogInformation($"Unsupported update type: {update.Type}");
                 return false;
         }
+        
+        await  userClient.RegisterUserAsync(chatId.Value, username, cancellationToken);
 
         if (await IsAuthorizedInUrfuAsync(chatId.Value, cancellationToken)) return true;
 

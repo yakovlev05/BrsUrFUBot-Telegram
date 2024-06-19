@@ -24,7 +24,7 @@ public class UserClient : IUserClient
         _telegramService = telegramService;
     }
 
-    public async Task RegisterUserAsync(long chatId, string username, CancellationToken cancellationToken)
+    public async Task RegisterUserAsync(long chatId, string? username, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Registering user: {Username}", username);
         var request = new RegisterUserRequestModel(chatId, username);

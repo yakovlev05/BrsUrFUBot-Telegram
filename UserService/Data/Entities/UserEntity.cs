@@ -8,5 +8,5 @@ public class UserEntity
     public bool IsAuthorizedInUrfu { get; set; }
     public DateTime RegisteredInBot = DateTime.Now.ToUniversalTime();
     public long TelegramChatId { get; set; }
-    public string TelegramUsername { get; set; } = null!;
+    public string? TelegramUsername { get; set; } = null!;
 }

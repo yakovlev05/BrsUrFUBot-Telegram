@@ -183,7 +183,6 @@ public class TelegramService(ILogger<TelegramService> logger, ITelegramBotClient
         await botClient.SendTextMessageAsync(
             chatId,
             baseText + text,
-            cancellationToken: cancellationToken,
-            parseMode: ParseMode.MarkdownV2);
+            cancellationToken: cancellationToken);
     }
 }

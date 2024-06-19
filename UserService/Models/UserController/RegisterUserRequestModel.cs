@@ -1,3 +1,3 @@
 namespace UserService.Models.UserController;
 
-public record RegisterUserRequestModel(long TelegramChatId, string TelegramUsername);
+public record RegisterUserRequestModel(long TelegramChatId, string? TelegramUsername);
