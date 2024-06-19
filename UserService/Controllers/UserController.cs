@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Data.Entities;
 using UserService.Data.Repositories;
@@ -54,5 +55,31 @@ public class UserController(IRepository<UserEntity> repository) : Controller
             return BadRequest("User not found");
 
         return user.IsAuthorizedInUrfu ? Ok() : Unauthorized();
+    }
+
+    [HttpPatch("chatId/{id}/set/auth")]
+    public async Task<ActionResult> SetIsAuthorizedInUrfu(long id, [FromBody] bool isAuthorized)
+    {
+        var user = (await repository.GetAllAsync()).FirstOrDefault(x => x.TelegramChatId == id);
+        if (user is null)
+            return BadRequest("User not found");
+
+        user.IsAuthorizedInUrfu = isAuthorized;
+        await repository.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpDelete("chatId/{id}")]
+    public async Task<ActionResult> DeleteUser(long id)
+    {
+        var user = (await repository.GetAllAsync()).FirstOrDefault(x => x.TelegramChatId == id);
+        if (user is null)
+            return BadRequest("User not found");
+
+        repository.Delete(user);
+        await repository.SaveChangesAsync();
+
+        return Ok();
     }
 }
