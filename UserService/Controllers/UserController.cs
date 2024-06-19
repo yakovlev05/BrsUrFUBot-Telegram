@@ -29,7 +29,7 @@ public class UserController(IRepository<UserEntity> repository) : Controller
     }
 
     [HttpPatch("chatId/{id}")]
-    public async Task<ActionResult<bool>> AuthenticateInUrfu(long id, AuthenticateInUrfuRequestModel request)
+    public async Task<ActionResult> AuthenticateInUrfu(long id, AuthenticateInUrfuRequestModel request)
     {
         var user = (await repository.GetAllAsync()).FirstOrDefault(x => x.TelegramChatId == id);
         if (user is null)
@@ -43,16 +43,16 @@ public class UserController(IRepository<UserEntity> repository) : Controller
 
         //TODO: Логика авторизации
 
-        return true;
+        return Ok();
     }
 
     [HttpGet("chatId/{id}")]
-    public async Task<ActionResult<bool>> IsAuthorizedInUrfu(long id)
+    public async Task<ActionResult> IsAuthorizedInUrfu(long id)
     {
         var user = (await repository.GetAllAsync()).FirstOrDefault(x => x.TelegramChatId == id);
         if (user is null)
             return BadRequest("User not found");
 
-        return user.IsAuthorizedInUrfu;
+        return user.IsAuthorizedInUrfu ? Ok() : Unauthorized();
     }
 }
