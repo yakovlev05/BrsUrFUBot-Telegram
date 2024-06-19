@@ -13,7 +13,7 @@ public class AuthorizeInUrfuService(ITelegramBotClient botClient, IUserClient us
         var chatId = GetChatId(update);
         var username = GetUsername(update);
 
-        if (chatId == long.MinValue) return false; // В этот момент мы заблокированы (одна из причин)
+        if (chatId == long.MinValue) return false; // В этот момент мы заблокированы(одна из причин)
 
         if (await userClient.IsAuthorizedInUrfuAsync(chatId, cancellationToken))
             return true; // Пользователь авторизован
@@ -62,10 +62,11 @@ public class AuthorizeInUrfuService(ITelegramBotClient botClient, IUserClient us
             await SendInfoAuthenticationAsync(chatId, cancellationToken);
             return false;
         }
-        
+
         if (loginPassword is null || loginPassword.Length != 2)
         {
-            await SendUnsuccessfulAuthenticationAsync(chatId, cancellationToken);
+            await DeletePreviousMessageAsync(chatId, update.Message.MessageId, cancellationToken);
+            await SendInvalidFormAsync(chatId, cancellationToken);
             return false;
         }
 
@@ -74,11 +75,13 @@ public class AuthorizeInUrfuService(ITelegramBotClient botClient, IUserClient us
 
         if (result)
         {
+            await DeletePreviousMessageAsync(chatId, update.Message.MessageId, cancellationToken);
             await SendSuccessfulAuthenticationAsync(chatId, cancellationToken);
             return true;
         }
         else
         {
+            await DeletePreviousMessageAsync(chatId, update.Message.MessageId, cancellationToken);
             await SendUnsuccessfulAuthenticationAsync(chatId, cancellationToken);
             return false;
         }
@@ -96,7 +99,7 @@ public class AuthorizeInUrfuService(ITelegramBotClient botClient, IUserClient us
     {
         await botClient.SendTextMessageAsync(
             chatId,
-            "⚠️ Для продолжения работы необходимо авторизоваться в УрФУ ?? \n ℹ️ Введите логин и пароль по шаблону: \n <логин> \n <пароль>",
+            "⚠️ Для продолжения работы необходимо авторизоваться в УрФУ\nℹ️ Введите логин и пароль по шаблону:\nЛОГИН\nПАРОЛЬ",
             cancellationToken: cancellationToken);
     }
 
@@ -106,5 +109,18 @@ public class AuthorizeInUrfuService(ITelegramBotClient botClient, IUserClient us
             chatId,
             "❌ Неверный логин или пароль. Попробуйте ещё раз",
             cancellationToken: cancellationToken);
+    }
+
+    private async Task SendInvalidFormAsync(long chatId, CancellationToken cancellationToken)
+    {
+        await botClient.SendTextMessageAsync(
+            chatId,
+            "❌ Неверный формат ввода📝\n \n \nℹ️ Введите логин и пароль по шаблону:\nЛОГИН\nПАРОЛЬ",
+            cancellationToken: cancellationToken);
+    }
+
+    private async Task DeletePreviousMessageAsync(long chatId, int messageId, CancellationToken cancellationToken)
+    {
+        await botClient.DeleteMessageAsync(chatId, messageId, cancellationToken);
     }
 }
