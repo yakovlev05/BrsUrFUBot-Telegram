@@ -175,4 +175,15 @@ public class TelegramService(ILogger<TelegramService> logger, ITelegramBotClient
             cancellationToken: cancellationToken,
             replyMarkup: keyboard);
     }
+
+    public async Task SendErrorMessageAsync(long chatId, string text, CancellationToken cancellationToken)
+    {
+        var baseText = "‼️Произошла ошибка: \n";
+
+        await botClient.SendTextMessageAsync(
+            chatId,
+            baseText + text,
+            cancellationToken: cancellationToken,
+            parseMode: ParseMode.MarkdownV2);
+    }
 }

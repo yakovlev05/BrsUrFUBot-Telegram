@@ -11,4 +11,5 @@ public interface ITelegramService
     public Task SendBrsUpdateAsync(Message message, CancellationToken cancellationToken);
     public Task SendSettingsUpdateAuthAsync(Message message, CancellationToken cancellationToken);
     public Task SendSettingsDeleteAccountQuestionAsync(Message message, CancellationToken cancellationToken);
+    public Task SendErrorMessageAsync(long chatId, string text, CancellationToken cancellationToken);
 }

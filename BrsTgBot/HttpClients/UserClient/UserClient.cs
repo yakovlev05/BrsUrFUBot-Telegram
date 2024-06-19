@@ -1,5 +1,7 @@
+using System.Net;
 using BrsTgBot.HttpClients.UserClient.Abstract;
 using BrsTgBot.HttpClients.UserClient.Models;
+using BrsTgBot.Services.Interfaces;
 
 namespace BrsTgBot.HttpClients.UserClient;
 
@@ -7,8 +9,10 @@ public class UserClient : IUserClient
 {
     private readonly HttpClient _client;
     private readonly ILogger<UserClient> _logger;
+    private readonly ITelegramService _telegramService;
 
-    public UserClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<UserClient> logger)
+    public UserClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<UserClient> logger,
+        ITelegramService telegramService)
     {
         var url = configuration.GetValue<string>("USER_SERVICE_URL");
         if (url is null) throw new NullReferenceException("USER_SERVICE_URL is not set");
@@ -17,38 +21,25 @@ public class UserClient : IUserClient
         _client.BaseAddress = new Uri(url);
 
         _logger = logger;
+        _telegramService = telegramService;
     }
 
-    public async Task<HttpResponseMessage> AddUserAsync(AddUserRequestModel model, CancellationToken cancellationToken)
+    public async Task RegisterUserAsync(long chatId, string username, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("AddUserAsync with model: {model}", model);
+        _logger.LogInformation("Registering user: {Username}", username);
+        var request = new RegisterUserRequestModel(chatId, username);
 
-        var response = await _client.PostAsJsonAsync("add", model, cancellationToken);
-        return response;
-    }
-
-    public async Task<HttpResponseMessage> GetUserByTelegramIdAsync(int id, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("GetUserByTelegramIdAsync with id: {id}", id);
-
-        var response = await _client.GetAsync($"telegramId/{id}", cancellationToken);
-        return response;
-    }
-
-    public async Task<HttpResponseMessage> UpdateUserByTelegramIdAsync(int id, UpdateUserRequestModel model,
-        CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("UpdateUserByTelegramIdAsync with id: {id} and model: {model}", id, model);
-
-        var response = await _client.PutAsJsonAsync($"telegramId/{id}", model, cancellationToken);
-        return response;
-    }
-
-    public async Task<HttpResponseMessage> DeleteUserByTelegramIdAsync(int id, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("DeleteUserByTelegramIdAsync with id: {id}", id);
-
-        var response = await _client.DeleteAsync($"telegramId/{id}", cancellationToken);
-        return response;
+        try
+        {
+            var response = await _client.PostAsJsonAsync("/user/register", request, cancellationToken);
+            if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.BadRequest)
+                await _telegramService.SendErrorMessageAsync(chatId,
+                    $"Error while registering user, status code: {response.StatusCode}", cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while registering user");
+            await _telegramService.SendErrorMessageAsync(chatId, e.ToString(), cancellationToken);
+        }
     }
 }
