@@ -56,10 +56,9 @@ public class UserClient : IUserClient
             {
                 await _telegramService.SendErrorMessageAsync(chatId,
                     $"Error while authenticating user in Urfu, status code: {response.StatusCode}", cancellationToken);
-                return false;
             }
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized) return false;
+            if (!response.IsSuccessStatusCode) return false;
         }
         catch (Exception e)
         {
@@ -78,15 +77,15 @@ public class UserClient : IUserClient
         try
         {
             var response = await _client.GetAsync($"/user/chatId/{chatId}", cancellationToken);
-            if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.Unauthorized)
+            if (!response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.Unauthorized &&
+                response.StatusCode != HttpStatusCode.BadRequest)
             {
                 await _telegramService.SendErrorMessageAsync(chatId,
                     $"Error while checking if user is authorized in Urfu, status code: {response.StatusCode}",
                     cancellationToken);
-                return false;
             }
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized) return false;
+            if (!response.IsSuccessStatusCode) return false;
         }
         catch (Exception e)
         {

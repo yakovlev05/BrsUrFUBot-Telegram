@@ -29,6 +29,7 @@ builder.Services.AddScoped<IUpdateHandler<CallbackQueryUpdateHandler>, CallbackQ
 builder.Services.AddScoped<IUpdateHandler<UnknownUpdateHandler>, UnknownUpdateHandler>();
 builder.Services.AddScoped<ITelegramService, TelegramService>();
 builder.Services.AddScoped<IUserClient, UserClient>();
+builder.Services.AddScoped<IAuthorizeInUrfuService, AuthorizeInUrfuService>();
 
 var app = builder.Build();
 
