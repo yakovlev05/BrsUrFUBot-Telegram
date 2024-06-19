@@ -42,11 +42,22 @@ public class UpdateHandlers(
     {
         var chatId = update.Type switch
         {
-            UpdateType.Message => update.Message!.Chat.Id,
-            UpdateType.CallbackQuery => update.CallbackQuery!.Message!.Chat.Id,
-            _ => throw new ArgumentException($"Unsupported update type: {update.Type}")
+            UpdateType.Message => update.Message?.Chat.Id,
+            UpdateType.CallbackQuery => update.CallbackQuery?.Message?.Chat.Id,
+            _ => long.MinValue
         };
-        if (await IsAuthorizedInUrfuAsync(chatId, cancellationToken)) return true;
+
+        switch (chatId)
+        {
+            case null:
+                logger.LogError("ChatId is null");
+                return false;
+            case long.MinValue:
+                logger.LogInformation($"Unsupported update type: {update.Type}");
+                return false;
+        }
+
+        if (await IsAuthorizedInUrfuAsync(chatId.Value, cancellationToken)) return true;
 
         //TODO: Логика авторизации в урфу
         return false;
